@@ -39,10 +39,12 @@ class CustomTabBar extends StatelessWidget {
   final bool pinned;
   final bool controlJump;
   final CustomTabBarController? tabBarController;
+  final ScrollController? scrollController;
   const CustomTabBar(
       {required this.builder,
       required this.itemCount,
       required this.pageController,
+      required this.scrollController,
       this.height,
       this.direction = Axis.horizontal,
       this.onTapItem,
@@ -74,6 +76,7 @@ class CustomTabBar extends StatelessWidget {
             controlJump: controlJump,
             indicator: indicator,
             tabBarController: tabBarController,
+            scrollController: scrollController,
             width: width,
             height: height,
             pinned: pinned,
@@ -94,12 +97,14 @@ class _CustomTabBar extends StatefulWidget {
   final bool pinned;
   final bool controlJump;
   final CustomTabBarController? tabBarController;
+  final ScrollController? scrollController;
   final Axis direction;
 
   const _CustomTabBar(
       {required this.builder,
       required this.itemCount,
       required this.pageController,
+      required this.scrollController,
       this.direction = Axis.horizontal,
       this.height,
       this.onTapItem,
@@ -119,7 +124,8 @@ class _CustomTabBarState extends State<_CustomTabBar>
     with TickerProviderStateMixin {
   late List<Size> sizeList =
       List.generate(widget.itemCount, (index) => Size(0, 0));
-  ScrollController? _scrollController;
+  late ScrollController _scrollController =
+      widget.scrollController ?? ScrollController();
   late CustomTabBarController _tabBarController =
       widget.tabBarController ?? CustomTabBarController();
   late int _currentIndex = widget.pageController.initialPage;
@@ -174,9 +180,9 @@ class _CustomTabBarState extends State<_CustomTabBar>
       progressNotifier?.value = ScrollProgressInfo(currentIndex: _currentIndex);
     });
 
-    if (!widget.pinned) {
+    /*  if (!widget.pinned) {
       _scrollController = ScrollController();
-    }
+    } */
 
     widget.pageController.addListener(() {
       if (_tabBarController.isJumpToTarget) return;
