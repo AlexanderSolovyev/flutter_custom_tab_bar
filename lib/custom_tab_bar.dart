@@ -167,10 +167,11 @@ class _CustomTabBarState extends State<_CustomTabBar>
     positionNotifier.addListener(() {
       setState(() {
         indicatorLeft = widget.rtl
+            ? positionNotifier.value.right + (widget.indicator?.right ?? 0)
+            : positionNotifier.value.left + (widget.indicator?.left ?? 0);
+        indicatorRight = widget.rtl
             ? positionNotifier.value.left + (widget.indicator?.left ?? 0)
             : positionNotifier.value.right + (widget.indicator?.right ?? 0);
-        indicatorRight =
-            positionNotifier.value.right + (widget.indicator?.right ?? 0);
 
         indicatorBottom =
             positionNotifier.value.bottom + (widget.indicator?.bottom ?? 0);
