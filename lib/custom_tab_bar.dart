@@ -237,8 +237,8 @@ class _CustomTabBarState extends State<_CustomTabBar>
         viewportBuilder: _buildViewport,
         axisDirection: widget.direction == Axis.horizontal
             ? widget.rtl
-                ? AxisDirection.right
-                : AxisDirection.left
+                ? AxisDirection.left
+                : AxisDirection.right
             : AxisDirection.down,
         physics: widget.pinned
             ? NeverScrollableScrollPhysics()
@@ -263,8 +263,8 @@ class _CustomTabBarState extends State<_CustomTabBar>
       offset: offset,
       axisDirection: widget.direction == Axis.horizontal
           ? widget.rtl
-              ? AxisDirection.right
-              : AxisDirection.left
+              ? AxisDirection.left
+              : AxisDirection.right
           : AxisDirection.down,
       slivers: [_buildSlivers()],
     );
