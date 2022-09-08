@@ -40,6 +40,7 @@ class CustomTabBar extends StatelessWidget {
   final bool controlJump;
   final CustomTabBarController? tabBarController;
   final ScrollController? scrollController;
+  final bool rtl;
   const CustomTabBar(
       {required this.builder,
       required this.itemCount,
@@ -53,6 +54,7 @@ class CustomTabBar extends StatelessWidget {
       this.width,
       this.pinned = false,
       this.controlJump = true,
+      this.rtl = false,
       Key? key})
       : assert(
             direction == Axis.horizontal ||
@@ -71,18 +73,20 @@ class CustomTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomTabBarContext(
         child: _CustomTabBar(
-            direction: direction,
-            onTapItem: onTapItem,
-            controlJump: controlJump,
-            indicator: indicator,
-            tabBarController: tabBarController,
-            scrollController: scrollController,
-            width: width,
-            height: height,
-            pinned: pinned,
-            builder: builder,
-            itemCount: itemCount,
-            pageController: pageController));
+      direction: direction,
+      onTapItem: onTapItem,
+      controlJump: controlJump,
+      indicator: indicator,
+      tabBarController: tabBarController,
+      scrollController: scrollController,
+      width: width,
+      height: height,
+      pinned: pinned,
+      builder: builder,
+      itemCount: itemCount,
+      pageController: pageController,
+      rtl: rtl,
+    ));
   }
 }
 
@@ -99,6 +103,7 @@ class _CustomTabBar extends StatefulWidget {
   final CustomTabBarController? tabBarController;
   final ScrollController? scrollController;
   final Axis direction;
+  final bool rtl;
 
   const _CustomTabBar(
       {required this.builder,
@@ -113,6 +118,7 @@ class _CustomTabBar extends StatefulWidget {
       this.indicator,
       this.width,
       this.pinned = false,
+      this.rtl = false,
       Key? key})
       : super(key: key);
 
@@ -160,8 +166,9 @@ class _CustomTabBarState extends State<_CustomTabBar>
 
     positionNotifier.addListener(() {
       setState(() {
-        indicatorLeft =
-            positionNotifier.value.left + (widget.indicator?.left ?? 0);
+        indicatorLeft = widget.rtl
+            ? positionNotifier.value.left + (widget.indicator?.left ?? 0)
+            : positionNotifier.value.right + (widget.indicator?.right ?? 0);
         indicatorRight =
             positionNotifier.value.right + (widget.indicator?.right ?? 0);
 
@@ -228,7 +235,9 @@ class _CustomTabBarState extends State<_CustomTabBar>
         controller: _scrollController,
         viewportBuilder: _buildViewport,
         axisDirection: widget.direction == Axis.horizontal
-            ? AxisDirection.right
+            ? widget.rtl
+                ? AxisDirection.right
+                : AxisDirection.left
             : AxisDirection.down,
         physics: widget.pinned
             ? NeverScrollableScrollPhysics()
@@ -252,7 +261,9 @@ class _CustomTabBarState extends State<_CustomTabBar>
     return Viewport(
       offset: offset,
       axisDirection: widget.direction == Axis.horizontal
-          ? AxisDirection.right
+          ? widget.rtl
+              ? AxisDirection.right
+              : AxisDirection.left
           : AxisDirection.down,
       slivers: [_buildSlivers()],
     );
